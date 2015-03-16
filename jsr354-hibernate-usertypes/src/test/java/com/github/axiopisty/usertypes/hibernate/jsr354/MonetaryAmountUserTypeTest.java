@@ -136,8 +136,8 @@ public class MonetaryAmountUserTypeTest {
   public void testQueryByEqualMonetaryAmounts() {
     int NUMBER_OF_ITEMS = 5;
     int ITEM_INDEX = 2;
-    List<MonetaryAmountWrapper> ids = cleanDatabaseAndInsertTestRecords(NUMBER_OF_ITEMS);
-    MonetaryAmountWrapper threshold = ids.get(ITEM_INDEX);
+    List<MonetaryAmountWrapper> wrappers = cleanDatabaseAndInsertTestRecords(NUMBER_OF_ITEMS);
+    MonetaryAmountWrapper threshold = wrappers.get(ITEM_INDEX);
     service.cleanCache();
     Long actual = service.queryByMonetaryAmount(threshold.getMonetaryAmount());
     Long expected = threshold.getId();
@@ -148,8 +148,8 @@ public class MonetaryAmountUserTypeTest {
   public void testQueryByMonetaryAmountsGreaterThan() {
     int NUMBER_OF_ITEMS = 5;
     int ITEM_INDEX = 3;
-    List<MonetaryAmountWrapper> ids = cleanDatabaseAndInsertTestRecords(NUMBER_OF_ITEMS);
-    MonetaryAmount threshold = ids.get(ITEM_INDEX).getMonetaryAmount();
+    List<MonetaryAmountWrapper> wrappers = cleanDatabaseAndInsertTestRecords(NUMBER_OF_ITEMS);
+    MonetaryAmount threshold = wrappers.get(ITEM_INDEX).getMonetaryAmount();
     service.cleanCache();
     List<MonetaryAmountWrapper> actual = service.getMonetaryAmountsGreaterThan(threshold);
     int expected = NUMBER_OF_ITEMS - ITEM_INDEX;
