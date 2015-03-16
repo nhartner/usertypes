@@ -19,12 +19,17 @@ import javax.persistence.*;
   @NamedQuery(
     name = MonetaryAmountWrapper.QUERIES.FIND_BY_MONETARY_AMOUNT,
     query = "select maw from MonetaryAmountWrapper maw where maw.monetaryAmount = :monetaryAmount"
+  ),
+  @NamedQuery(
+    name = MonetaryAmountWrapper.QUERIES.FIND_BY_MONETARY_AMOUNT_GT,
+    query = "select maw from MonetaryAmountWrapper maw where maw.monetaryAmount > :monetaryAmount"
   )
 })
 public class MonetaryAmountWrapper {
 
   public static class QUERIES {
     public final static String FIND_BY_MONETARY_AMOUNT = "com.github.axiopisty.usertypes.wrapper.entities.MonetaryAmountWrapper.QUERIES.FIND_BY_MONETARY_AMOUNT";
+    public final static String FIND_BY_MONETARY_AMOUNT_GT = "com.github.axiopisty.usertypes.wrapper.entities.MonetaryAmountWrapper.QUERIES.FIND_BY_MONETARY_AMOUNT_GT";
     public final static String DELETE_ALL = "com.github.axiopisty.usertypes.wrapper.entities.MonetaryAmountWrapper.QUERIES.DELETE_ALL";
   }
 

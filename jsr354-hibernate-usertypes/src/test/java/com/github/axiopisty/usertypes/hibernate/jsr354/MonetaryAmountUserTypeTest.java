@@ -1,5 +1,6 @@
 package com.github.axiopisty.usertypes.hibernate.jsr354;
 
+import com.github.axiopisty.usertypes.wrapper.entities.MonetaryAmountWrapper;
 import com.github.axiopisty.usertypes.wrapper.service.MonetaryAmountWrapperService;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
@@ -116,7 +117,7 @@ public class MonetaryAmountUserTypeTest {
   }
 
   private Long create(MonetaryAmount amount) {
-    Long id = service.save(amount);
+    Long id = service.save(amount).getId();
     assertTrue("id should exist after saving the wrapper", id != null);
     return id;
   }
@@ -132,15 +133,36 @@ public class MonetaryAmountUserTypeTest {
   }
 
   @Test
-  public void testQueryByMonetaryAmountUserType() {
-    List<Long> ids = new ArrayList<>();
-    for(int i = 0; i < 5; ++i) {
+  public void testQueryByEqualMonetaryAmounts() {
+    int NUMBER_OF_ITEMS = 5;
+    int ITEM_INDEX = 2;
+    List<MonetaryAmountWrapper> ids = cleanDatabaseAndInsertTestRecords(NUMBER_OF_ITEMS);
+    MonetaryAmountWrapper threshold = ids.get(ITEM_INDEX);
+    service.cleanCache();
+    Long actual = service.queryByMonetaryAmount(threshold.getMonetaryAmount());
+    Long expected = threshold.getId();
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testQueryByMonetaryAmountsGreaterThan() {
+    int NUMBER_OF_ITEMS = 5;
+    int ITEM_INDEX = 3;
+    List<MonetaryAmountWrapper> ids = cleanDatabaseAndInsertTestRecords(NUMBER_OF_ITEMS);
+    MonetaryAmount threshold = ids.get(ITEM_INDEX).getMonetaryAmount();
+    service.cleanCache();
+    List<MonetaryAmountWrapper> actual = service.getMonetaryAmountsGreaterThan(threshold);
+    int expected = NUMBER_OF_ITEMS - ITEM_INDEX;
+    assertEquals("MonetaryAmounts should be comparable", expected, actual.size());
+  }
+
+  private List<MonetaryAmountWrapper> cleanDatabaseAndInsertTestRecords(int count) {
+    service.cleanDatabase();
+    List<MonetaryAmountWrapper> ids = new ArrayList<>();
+    for(int i = 0; i < count; ++i) {
       ids.add(service.save(ONE_USD.add(Money.of(new BigDecimal("" + i), USD))));
     }
-
-    Long expected = ids.get(4);
-    Long actual = service.queryByMonetaryAmount(Money.of(new BigDecimal("5"), USD));
-    assertEquals(expected, actual);
-    service.cleanDatabase();
+    return ids;
   }
+
 }

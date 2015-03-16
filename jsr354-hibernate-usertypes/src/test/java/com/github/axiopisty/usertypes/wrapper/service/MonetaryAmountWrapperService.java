@@ -9,6 +9,7 @@ import javax.money.MonetaryAmount;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.List;
 
 /**
  * @author Elliot Huntington
@@ -20,11 +21,11 @@ public class MonetaryAmountWrapperService {
   @PersistenceContext
   private EntityManager em;
 
-  public Long save(MonetaryAmount value) {
+  public MonetaryAmountWrapper save(MonetaryAmount value) {
     MonetaryAmountWrapper wrapper = new MonetaryAmountWrapper();
     wrapper.setMonetaryAmount(value);
     em.persist(wrapper);
-    return wrapper.getId();
+    return wrapper;
   }
 
   public void update(Long id, MonetaryAmount amount) {
@@ -48,5 +49,13 @@ public class MonetaryAmountWrapperService {
     Query q = em.createNamedQuery(MonetaryAmountWrapper.QUERIES.FIND_BY_MONETARY_AMOUNT);
     q.setParameter("monetaryAmount", ma);
     return ((MonetaryAmountWrapper) q.getSingleResult()).getId();
+  }
+
+  public List<MonetaryAmountWrapper> getMonetaryAmountsGreaterThan(MonetaryAmount ma) {
+    Query q = em.createNamedQuery(MonetaryAmountWrapper.QUERIES.FIND_BY_MONETARY_AMOUNT_GT);
+    q.setParameter("monetaryAmount", ma);
+    @SuppressWarnings("unchecked")
+    List<MonetaryAmountWrapper> results = (List<MonetaryAmountWrapper>) q.getResultList();
+    return results;
   }
 }
