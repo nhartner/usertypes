@@ -158,11 +158,11 @@ public class MonetaryAmountUserTypeTest {
 
   private List<MonetaryAmountWrapper> cleanDatabaseAndInsertTestRecords(int count) {
     service.cleanDatabase();
-    List<MonetaryAmountWrapper> ids = new ArrayList<>();
+    List<MonetaryAmountWrapper> list = new ArrayList<>();
     for(int i = 0; i < count; ++i) {
-      ids.add(service.save(ONE_USD.add(Money.of(new BigDecimal("" + i), USD))));
+      list.add(service.save(ONE_USD.add(Money.of(new BigDecimal("" + i), USD))));
     }
-    return ids;
+    return list;
   }
 
 }
