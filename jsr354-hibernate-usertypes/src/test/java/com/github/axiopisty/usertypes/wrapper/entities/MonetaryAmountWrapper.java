@@ -19,12 +19,13 @@ import javax.persistence.*;
   @NamedQuery(
     name = MonetaryAmountWrapper.QUERIES.FIND_BY_MONETARY_AMOUNT,
     query = "select maw from MonetaryAmountWrapper maw where maw.monetaryAmount = :monetaryAmount"
-  ),
-  @NamedQuery(
+  )
+  ,@NamedQuery(
     name = MonetaryAmountWrapper.QUERIES.FIND_BY_MONETARY_AMOUNT_GT,
-    query = "select maw from MonetaryAmountWrapper maw where maw.monetaryAmount > :monetaryAmount"
+    query = "select maw from MonetaryAmountWrapper maw where maw.monetaryAmount.number  >= :monetaryAmount"
   )
 })
+
 public class MonetaryAmountWrapper {
 
   public static class QUERIES {

@@ -2,6 +2,10 @@ package com.github.axiopisty.usertypes.hibernate.jsr354;
 
 import com.github.axiopisty.usertypes.wrapper.entities.MonetaryAmountWrapper;
 import com.github.axiopisty.usertypes.wrapper.service.MonetaryAmountWrapperService;
+
+import org.hibernate.type.BigDecimalType;
+import org.hibernate.type.StringType;
+import org.hibernate.type.Type;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +18,7 @@ import javax.money.MonetaryAmount;
 import javax.money.MonetaryCurrencies;
 import javax.money.format.MonetaryAmountFormat;
 import javax.money.format.MonetaryFormats;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Types;
@@ -47,8 +52,8 @@ public class MonetaryAmountUserTypeTest {
 
   @Test
   public void testSqlTypes() {
-    int[] expected = {Types.NUMERIC, Types.VARCHAR};
-    int[] actual = MAUT.sqlTypes();
+    Type[] expected = { BigDecimalType.INSTANCE, StringType.INSTANCE };
+    Type[] actual = MAUT.getPropertyTypes();
     assertArrayEquals(expected, actual);
   }
 
@@ -83,17 +88,17 @@ public class MonetaryAmountUserTypeTest {
 
   @Test
   public void testDisassemble() {
-    MAUT.disassemble(ONE_USD);
+    MAUT.disassemble(ONE_USD, null);
   }
 
   @Test
   public void testAssemble() {
-    assertEquals(ONE_CNY, MAUT.assemble((Serializable) ONE_CNY, null));
+    assertEquals(ONE_CNY, MAUT.assemble((Serializable) ONE_CNY, null, null));
   }
 
   @Test
   public void testReplace() {
-    assertEquals(ONE_CNY, MAUT.replace(ONE_CNY, null, null));
+    assertEquals(ONE_CNY, MAUT.replace(ONE_CNY, null, null, null));
   }
 
   @Test

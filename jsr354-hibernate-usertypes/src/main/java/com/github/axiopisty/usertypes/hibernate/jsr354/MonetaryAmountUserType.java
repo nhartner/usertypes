@@ -1,18 +1,23 @@
 package com.github.axiopisty.usertypes.hibernate.jsr354;
 
-import com.github.axiopisty.usertypes.hibernate.ImmutableUserType;
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
-import org.hibernate.usertype.UserType;
-import org.javamoney.moneta.Money;
-
-import javax.money.MonetaryAmount;
-import javax.money.MonetaryCurrencies;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+
+import javax.money.MonetaryAmount;
+import javax.money.MonetaryCurrencies;
+
+import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.type.BigDecimalType;
+import org.hibernate.type.StringType;
+import org.hibernate.type.Type;
+import org.hibernate.usertype.UserType;
+import org.javamoney.moneta.Money;
+
+import com.github.axiopisty.usertypes.hibernate.ImmutableUserType;
 
 /**
  * <p>
@@ -29,8 +34,14 @@ public class MonetaryAmountUserType extends ImmutableUserType {
   private final static int[] SQL_TYPES = {Types.NUMERIC, Types.VARCHAR};
 
   @Override
-  public int[] sqlTypes() {
-    return SQL_TYPES;
+  public Type[] getPropertyTypes() {
+    return new Type[] { BigDecimalType.INSTANCE, StringType.INSTANCE };
+  }
+
+
+  @Override
+  public String[] getPropertyNames() {
+    return new String[]{"number", "currency"};
   }
 
   @Override
@@ -72,4 +83,20 @@ public class MonetaryAmountUserType extends ImmutableUserType {
     st.setBigDecimal(index, amount);
     st.setString(index + 1, currencyCode);
   }
+
+  @Override
+  public Object getPropertyValue(Object component, int property) throws HibernateException {
+    MonetaryAmount amount = (MonetaryAmount) component;
+    switch(property) {
+      case 0: return amount.getNumber();
+      case 1: return amount.getCurrency();
+      default: throw new IllegalArgumentException(property + " is not a valid property index");
+    }
+  }
+
+  @Override
+  public void setPropertyValue(Object component, int property, Object value) throws HibernateException {
+    throw new UnsupportedOperationException("MonetaryAmount is immutable.");
+  }
+
 }

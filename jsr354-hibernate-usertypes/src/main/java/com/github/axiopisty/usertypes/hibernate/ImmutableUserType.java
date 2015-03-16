@@ -1,6 +1,8 @@
 package com.github.axiopisty.usertypes.hibernate;
 
 import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.usertype.CompositeUserType;
 import org.hibernate.usertype.UserType;
 
 import java.io.Serializable;
@@ -8,7 +10,7 @@ import java.io.Serializable;
 /**
  * @author Elliot Huntington
  */
-public abstract class ImmutableUserType implements UserType {
+public abstract class ImmutableUserType implements CompositeUserType {
 
   @Override
   public boolean equals(Object x, Object y) throws HibernateException {
@@ -31,17 +33,17 @@ public abstract class ImmutableUserType implements UserType {
   }
 
   @Override
-  public Serializable disassemble(Object value) throws HibernateException {
+  public Serializable disassemble(Object value, SessionImplementor implementor) throws HibernateException {
     return (Serializable)value;
   }
 
   @Override
-  public Object assemble(Serializable cached, Object owner) throws HibernateException {
+  public Object assemble(Serializable cached, SessionImplementor implementor, Object owner) throws HibernateException {
     return cached;
   }
 
   @Override
-  public Object replace(Object original, Object target, Object owner) throws HibernateException {
+  public Object replace(Object original, Object target, SessionImplementor implementor, Object owner) throws HibernateException {
     return original;
   }
 }
